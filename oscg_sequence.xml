@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="select_year_view" model="ir.ui.view">
+            <field name="name">sequence.select.year.form</field>
+            <field name="model">sequence.select.year</field>
+            <field name="arch" type="xml">
+                <form string="Select Year" version="7.0">
+                    <group colspan="4" col="4">
+                        <field name="year" required="1"/>
+                    </group>
+                    <footer>
+                        <button string="OK" name="create_sequence_month" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_select_year" model="ir.actions.act_window">
+            <field name="name">Select Year</field>
+            <field name="res_model">sequence.select.year</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="select_year_view"/>
+            <field name="target">new</field>
+        </record>
+
+        <record id="oscg_ir_sequence_form_view" model="ir.ui.view">
+            <field name="name">oscg.ir.sequence.form</field>
+            <field name="model">ir.sequence</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.sequence_view"/>
+            <field name="arch" type="xml">
+               <xpath expr="//field[@name='implementation']" position="after">
+                   <field name="by_date"/>
+                   <field name="latest_date" attrs="{'invisible':[('by_date','=',False)]}"/><newline/>
+                   <field name="by_month"/><newline/>
+                   <group colspan="4">
+                       <button string="Select Year" name="%(action_select_year)d" type="action" class="oe_inline oe_right" attrs="{'invisible':[('by_month','=',False)]}"/>
+                       <field name="month_sequences" colspan="4" attrs="{'invisible':[('by_month','=',False)]}" nolabel="1">
+                            <tree string="Month Sequence" editable="bottom">
+                                <field name="month"/>
+                                <field name="next_number"/>
+                            </tree>
+                       </field>
+                   </group>
+               </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
